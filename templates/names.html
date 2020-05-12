@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Names</title>
+    </head>
+    <body>
+        <ul>
+        {% for name in names%}
+          <li>{{ name }}</li>
+        {% endfor %}
+        </ul>
+
+        <a href="{{ url_for('index') }}">visit home page</a>
+
+    </body>
+</html>
