@@ -2,6 +2,7 @@ import os
 
 import flask_sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -61,4 +62,27 @@ def flight(flight_id):
     #Get all passengers:
     passengers = Passenger.query.filter_by(flight_id=flight_id).all()
     return render_template("flight.html", flight=flight, passengers=passengers)
+
+# Create Flask API for flights
+@app.route("/api/flights/<int:flight_id>")
+def flight_api(flight_id):
+    """Return details about a single flight."""
+
+    # Makesure flight exits.
+    flight = Flight.query.get(flight_id)
+    if flight is None:
+        return jsonify({"error": "Invalid flight_id"}), 422
+    
+    
+    # Get all passengers.
+    passengers = flight.passengers
+    names = []
+    for passenger in passengers:
+        names.append(passenger.name)
+    return jsonify({
+        "origin":flight.origin,
+        "destination":flight.destination,
+        "duration": flight.duration,
+        "passengers": names
+    })
 
